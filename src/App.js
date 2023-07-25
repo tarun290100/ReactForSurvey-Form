@@ -7,7 +7,7 @@ import './App.css';
 function App() {
   return (
     <> 
-    <Header title ="TodoListApp"  searchBar={false}/>
+    <Header title ="MyTodoList"  searchBar={false}/>
     <Todos/>
     <Footer/>
 

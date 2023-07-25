@@ -2,6 +2,6 @@ import React from 'react'
 
 export const Todo = () => {
   return (
-    <div>Todo</div>
+    <div>Todo items</div>
   )
 }
