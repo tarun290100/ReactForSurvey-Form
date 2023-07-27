@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 export const AddTodo = ({addTodo})=>{
+
+
+//useState is used to update the input fields for survey
+
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [role, setRole] = useState("");
   const [que1, setQue1] = useState("");
   const [que2,setQue2] = useState("");
   const [que3, setQue3] = useState("");
+
+
+
+  //Here is submit function to save all details of survey
+  //submit function call addTodo to save user details
+
   const submit=(e)=>{
     e.preventDefault();
     if(!city||!name||!role||!que1||!que2||!que3){
@@ -16,10 +26,12 @@ export const AddTodo = ({addTodo})=>{
     }
   
   }
-  let inputStyle={
-    
-  }
+  
+  
     return(
+
+    //Here is Survey form to fill for employee
+    //onsubmit submit function will call
    <div className='container my-3'>
     <h3 className='my-4'>Fill Survey-Form</h3>
     <form onSubmit={submit}>
