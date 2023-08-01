@@ -1,78 +1,82 @@
-
-import Header from "./MyComponents/Header"
-import {Footer} from "./MyComponents/Footer"
-import {Todos} from "./MyComponents/Todos"
-import './App.css';
-import {useState} from 'react';
-import {AddTodo} from "./MyComponents/AddTodo"
+import Header from "./MyComponents/Header";
+import { Footer } from "./MyComponents/Footer";
+import { Users } from "./MyComponents/Users";
+import { About } from "./MyComponents/About";
+import { useState } from "react";
+import { Form } from "./MyComponents/Form";
 import { useEffect } from "react";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import axios from "axios";
+import { message } from "antd";
 function App() {
 
-
-  //Initialize user data from local storage
-  
-  let initTodo;
-  if(localStorage.getItem("todos")===null){
-    initTodo =[];
-  }
-  else{
-    initTodo=JSON.parse(localStorage.getItem("todos"));
-  }
-
-    //onDelete function use to DeleteUser
-
-  const onDelete = (todo)=>{
-    console.log("i am on delete",todo)
-
-    setTodos(todos.filter((e)=>{
-        return e!==todo;
-    }));
-    localStorage.setItem("todos",JSON.stringify(todos));
-  }
- 
-   // addTodo use save User
-
-  const addTodo = (name,city,role,que1,que2,que3)=>{
-    let id;
-    if(todos.length==0){
-      id = 1;
-    }
-     else{
-     id= todos[todos.length-1].id + 1;
-     }
-      const myTodo ={
-        id:id,
-        name:name,
-        city:city,
-        role:role,
-        que1:que1,
-        que2:que2,
-        que3:que3
-      }
-      setTodos([...todos,myTodo])
-      console.log(myTodo)
-  }
-     
   //useState to update users array
+  const [surveyRes, setSurveyRes] = useState([]);
 
-  const [todos,setTodos] = useState(initTodo)
-
-
-  //when todos update this useEffect will run
-
+  //Initialize user data
   useEffect(() => {
-    localStorage.setItem("todos",JSON.stringify(todos));
-  }, [todos])
+    getusers();
+  }, [surveyRes]);
 
+  const getusers = () => {
+    axios.get("http://localhost:8080/user").then((res) => {
+      setSurveyRes(res.data);
+    });
+  };
+
+  //onDelete function use to DeleteUser
+  const onDelete = (response) => {
+    console.log("delete called", response);
+    fetch(`http://localhost:8080/user/${response}`, {
+      method: "DELETE",
+    }).then((result) => {
+      getusers();
+    });
+  };
+
+  // addResonse use save User
+  const addResponse = (name, city, role, que1, que2, que3) => {
+    const myResponse = {
+      name: name,
+      city: city,
+      role: role,
+      que1: que1,
+      que2: que2,
+      que3: que3,
+    };
+
+    fetch("http://localhost:8080/user", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(myResponse),
+    })
+      .then((result) => {
+        if (result.status === 200) {
+          message.success("Thank You Your Feedback");
+        }
+        getusers();
+      })
+      .then(() => {
+        // window.location.replace("/users");
+      });
+  };
 
   return (
-    <> 
-    <Header title ="Survey-Form"  searchBar={false}/>
-    <AddTodo addTodo={addTodo}/>
-    <Todos todos={todos} onDelete={onDelete}/>
-    <Footer/>
+    <>
+      <BrowserRouter>
+        <Header title="Survey-Form" searchBar={false} />
+        <Routes>
+          <Route exact path="/"element= { <> <Form addResponse={addResponse} /> </> } />
+          <Route exact path="/users" element={ <> <Users surveyRes={surveyRes} onDelete={onDelete} /> </> }/>
+          <Route exact path="/about" element={ <> <About /> </> } />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </>
-  
   );
 }
 
