@@ -7,7 +7,6 @@ import { Form } from "./MyComponents/Form";
 import { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
 import { message } from "antd";
 function App() {
 
@@ -19,10 +18,10 @@ function App() {
     getusers();
   }, [surveyRes]);
 
-  const getusers = () => {
-    axios.get("http://localhost:8080/user").then((res) => {
-      setSurveyRes(res.data);
-    });
+  const getusers = async () => {
+    const response = await fetch("http://localhost:8080/user");
+    const data = await response.json();
+    setSurveyRes(data);
   };
 
   //onDelete function use to DeleteUser
@@ -56,7 +55,7 @@ function App() {
     })
       .then((result) => {
         if (result.status === 200) {
-          message.success("Thank You Your Feedback");
+          message.success("Thank You For Your Feedback!!");
         }
         getusers();
       })

@@ -66,7 +66,7 @@ export const Users = (props) =>{
     <div className='container my-5' style={myStyle}>
       <h3 className=' my-3' >User-List</h3>
      { props.surveyRes.length === 0? "No Survey Response to Display":
-    <> <Table dataSource={props.surveyRes} columns={columns} /></>
+    <> <Table dataSource={props.surveyRes} rowKey="props.surveyRes.id" columns={columns} /></>
   }
     </div>
   )
